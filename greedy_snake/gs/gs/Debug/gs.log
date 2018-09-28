@@ -1,0 +1,4 @@
+﻿  snake.c
+c:\greedy_snake\gs\gs\snake.c(98): warning C4047: “函数”:“DWORD”与“void *”的间接级别不同
+c:\greedy_snake\gs\gs\snake.c(98): warning C4024: “PlaySoundA”: 形参和实参 3 的类型不同
+  gs.vcxproj -> C:\greedy_snake\gs\Debug\gs.exe
