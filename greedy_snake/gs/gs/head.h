@@ -29,3 +29,11 @@ int g_arrSnake[DEF_SNAKE_LONG][3] = { 0 };
 
 //DIR OF SNAKE
 int g_nSnakeDir = to_west;
+
+//flag of food existance
+int g_bIsProFood = 1;
+
+int g_food_nRow;
+int g_food_nCol;
+
+int g_Snake_length = 2;//3-1, use index here

@@ -41,6 +41,10 @@ char IsSnakeDie(void);
 
 //get food
 void GenFood(void);
+
+//snake grow up
+void SnakeGrow(void);
+
 int main(void)
 {
 
@@ -61,11 +65,15 @@ int main(void)
 
 	SetSnakeRandPos();
 	
-	GenFood();
+	
 
 	while (1)
 	{
 		system("cls");
+
+		GenFood();
+		
+		SnakeGrow();
 
 		ChangeDir();
 		
@@ -165,7 +173,7 @@ void DrawSnake(void)
 void SnakeMove(void) 
 {
 	DestroySnake();
-	int i = DEF_SNAKE_LONG;
+	int i = DEF_SNAKE_LONG-1;
 	for (i; i >= 1; i--)
 	{
 		if (g_arrSnake[i][0] == 0)
@@ -243,18 +251,23 @@ char IsSnakeDie(void)
 
 void GenFood(void)
 {
+	//return if already got food
+	if (0 == g_bIsProFood)
+	{
+		return;
+	}
 	srand((unsigned int)time(NULL));
-	int nRow, nCol;
+	
 	while (1)
 	{
-		nRow = rand() % 18 + 1;
-		nCol = rand() % 21 + 1;
+		g_food_nRow = rand() % 18 + 1;
+		g_food_nCol = rand() % 21 + 1;
 
 		char flag = 1;
 		// detect whether the food and the snake are overlapped
 		for (int i = 0; g_arrSnake[i][0] != 0; i++)
 		{
-			if (nRow == g_arrSnake[i][0] && nCol*2 == g_arrSnake[i][1])
+			if (g_food_nRow == g_arrSnake[i][0] && g_food_nCol *2 == g_arrSnake[i][1])
 			{
 				flag = 0;
 				break;
@@ -266,5 +279,41 @@ void GenFood(void)
 		}
 	}
 	//plot food
-	strncpy(&g_strGameBack[nRow][nCol * 2], "¡ø", 2);
+	strncpy(&g_strGameBack[g_food_nRow][g_food_nCol * 2], "¡ø", 2);
+	g_bIsProFood = 0;
+}
+
+void SnakeGrow(void)
+{
+	if (g_food_nRow == g_arrSnake[0][0] &&
+		g_food_nCol*2 == g_arrSnake[0][1])
+	{
+		if (to_east == g_arrSnake[g_Snake_length][2])
+		{
+			g_arrSnake[g_Snake_length + 1][0] = g_arrSnake[g_Snake_length][0];
+			g_arrSnake[g_Snake_length + 1][1] = g_arrSnake[g_Snake_length][1] - 2;
+			g_arrSnake[g_Snake_length + 1][2] = g_arrSnake[g_Snake_length][2];
+
+		}
+		else if (to_west == g_arrSnake[g_Snake_length][2])
+		{
+			g_arrSnake[g_Snake_length + 1][0] = g_arrSnake[g_Snake_length][0];
+			g_arrSnake[g_Snake_length + 1][1] = g_arrSnake[g_Snake_length][1] + 2;
+			g_arrSnake[g_Snake_length + 1][2] = g_arrSnake[g_Snake_length][2];
+		}
+		else if (to_south == g_arrSnake[g_Snake_length][2])
+		{
+			g_arrSnake[g_Snake_length + 1][0] = g_arrSnake[g_Snake_length][0] + 1;
+			g_arrSnake[g_Snake_length + 1][1] = g_arrSnake[g_Snake_length][1];
+			g_arrSnake[g_Snake_length + 1][2] = g_arrSnake[g_Snake_length][2];
+		}
+		else if (to_north == g_arrSnake[g_Snake_length][2])
+		{
+			g_arrSnake[g_Snake_length + 1][0] = g_arrSnake[g_Snake_length][0] - 1;
+			g_arrSnake[g_Snake_length + 1][1] = g_arrSnake[g_Snake_length][1];
+			g_arrSnake[g_Snake_length + 1][2] = g_arrSnake[g_Snake_length][2];
+		}
+		g_Snake_length++;
+		g_bIsProFood = 1;
+	}
 }
